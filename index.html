@@ -1,17 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Lucas Ignacio Esparza Monroy 81464 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Home Page</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
+    <link rel="manifest" href="assets/img/favicons/site.webmanifest">
+
+    <style>
+        section {
+            padding: 2rem 9% 42px;
+        }
+
+        h1, h2 {
+        
+            font-weight: 700;
+        }
+
+        section h1 {
+            font-size: 3.75rem;
+            text-align: center;
+            margin: 0 0 2rem;
+        }
+
+        section p {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            margin-bottom: 1.25rem;
+            text-align: justify;
+        }
+
+        section img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 1.25rem auto;
+            border-radius: 25px;
+        }
+
+        @media (min-width: 768px) {
+            section {
+                padding: 3% 20%;
+            }
+
+            section h1 {
+                font-size: 4.5rem;
+            }
+
+            section p {
+                font-size: 1.25rem;
+                line-height: 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            section h1 {
+                margin-bottom: 3rem;
+            }
+        }
+    </style>
+
+    <style type="text/tailwindcss">
+    body {
+        @apply bg-slate-100 text-slate-800;
+    }
+
+    section {
+        @apply bg-slate-100;
+    }
+
+    h1, h2 {
+        @apply text-blue-900;
+    }
+
+    a {
+        @apply text-blue-800 underline;
+    }
+
+    a:hover {
+        @apply text-purple-800;
+    }
+</style>
 </head>
+
+
+
 <body>
-   <h1>Welcome to Lucas Esparza’s Home Page</h1>
-    <p>This is a simple HTML page that serves as the home page for my website. Here, you can find information about me, my interests, and links to other pages on my site.</p>
+    <section>
+        
+    <h1>Welcome to My Home Page</h1>
+    <h2>This is a simple HTML page that serves as the home page for my website. Here, you can find information about me, my interests, and links to other pages on my site.</h2>
+    
+    <img src="assets/img/yo.jpg" alt="Home Page Image" width="600" height="400">
+
     <p><a href="exercises/page-1.html">A Tale of Two Cities</a></p>
+    <p><a href="exercises/page-2.html">Purple Rain</a></p>
+    <p><a href="exercises/page-3.html">Big heading and smaller sub-heading</a></p>
+    <p><a href="exercises/page-4.html">Vincent van Gogh</a></p>
+    <p><a href="exercises/page-5.html">Ireland's Top Five Visitor Attractions</a></p>
+    <p><a href="exercises/hero-text.html">Hero block with animated text</a></p> 
+    <p><a href="exercises/hero-image.html">Hero block with background image</a></p>
+    <p><a href="exercises/hero-video.html">Hero block with background video</a></p>
     <p><a href="exercises/soccer.html">The World's Top Three Soccer Players</a></p>
     <p><a href="exercises/laptops.html">Three Top-Selling Laptop Computers</a></p>
-    <p><a href="exercises/page-2.html">Purple Rain</a></p
-    <p><a href="exercises/page-3.html">Big heading</a></p                                                     
+    
+
+
+  
+    </section>
 </body>
 </html>
