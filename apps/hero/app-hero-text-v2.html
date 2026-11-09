@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero</title>
+  <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <style type="text/tailwindcss">
+@theme {
+      --breakpoint-md: 768px;
+    }
+
+    .hero {
+      @apply flex items-center px-6 py-16 md:px-10 md:py-20;
+    }
+
+    .hero-content {
+      @apply w-full min-w-0;
+    }
+
+    .hero h1 {
+      @apply max-w-4xl text-3xl font-bold leading-tight md:text-5xl;
+    }
+
+    .hero h2 {
+      @apply mt-5 max-w-3xl text-lg font-normal leading-relaxed md:text-2xl;
+    }
+
+    .hero h1,
+    .hero h2 {
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .hero-light {
+      @apply bg-slate-50;
+    }
+
+    .hero-light h1 {
+      @apply text-slate-900;
+    }
+
+    .hero-light h2 {
+      @apply text-slate-700;
+    }
+
+    .hero-dark {
+      @apply bg-slate-900;
+    }
+
+    .hero-dark h1 {
+      @apply text-slate-50;
+    }
+
+    .hero-dark h2 {
+      @apply text-slate-300;
+    }
+
+    .hero-centre {
+      @apply text-center;
+    }
+
+    .hero-centre h1,
+    .hero-centre h2 {
+      @apply mx-auto;
+    }
+
+    .hero-min-height {
+      @apply min-h-[480px] md:min-h-[85vh];
+    }
+
+    .hero [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="hero hero-dark hero-centre">
+    <div class="hero-content">
+      <h1>Lorem ipsum dolor sit amet</h1>
+      <h2>Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+    </div>
+  </header>
+</body>
+</html>

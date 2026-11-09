@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero Block Generator — Image Version 1</title>
+  <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+  <link rel="preload" as="image" href="outputs/assets/img/hero-image.jpg">
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Shared hero styles: included in the exported page. -->
+  <style id="hero-styles" type="text/tailwindcss">
+    @theme {
+      --breakpoint-md: 768px;
+    }
+
+    /* Keep all palette variables available in preview and export. */
+    @source inline("bg-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{50,100,200,300,400,500,600,700,800,900,950}");
+    @source inline("bg-black bg-white");
+
+    .hero {
+      @apply flex items-center px-6 py-16 font-sans md:px-12 md:py-24;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero-image,
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-image {
+      z-index: 0;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .hero-overlay {
+      z-index: 1;
+    }
+
+    .hero-content {
+      @apply mx-auto w-full min-w-0 max-w-6xl;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      @apply max-w-4xl text-4xl font-bold leading-tight md:text-7xl;
+    }
+
+    .hero h2 {
+      @apply mt-6 max-w-3xl text-xl font-normal leading-relaxed md:text-3xl;
+    }
+
+    .hero h1,
+    .hero h2 {
+      @apply text-shadow-lg/30;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .hero .heading-sans {
+      @apply font-sans;
+    }
+
+    .hero .heading-serif {
+      @apply font-serif;
+    }
+
+    .hero-centre {
+      text-align: center;
+    }
+
+    .hero-centre h1,
+    .hero-centre h2 {
+      margin-inline: auto;
+    }
+
+    .hero-min-height {
+      @apply min-h-[480px] md:min-h-[85vh];
+    }
+
+    .hero [hidden] {
+      display: none !important;
+    }
+  </style>
+
+  <!-- Dynamic shared styles. Export uses a different image path. -->
+  <style id="hero-custom">
+    .hero .hero-image {
+      background-image: url("outputs/assets/img/hero-image.jpg");
+    }
+
+    .hero .hero-overlay {
+      background-color: var(--color-black);
+      background-image: none;
+      opacity: 0.4;
+    }
+
+    .hero h1 {
+      color: var(--color-white);
+      letter-spacing: -0.05em;
+    }
+
+    .hero h2 {
+      color: var(--color-white);
+      letter-spacing: -0.025em;
+    }
+  </style>
+
+  <!-- Editor-only styles: excluded from the exported document. -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .app-body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      color: #0f172a;
+      background: white;
+    }
+
+    .app {
+      padding-bottom: 9rem;
+    }
+
+    .editor-panel {
+      padding: 1.5rem;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    .editor-content {
+      max-width: 1152px;
+      min-width: 0;
+      margin: auto;
+    }
+
+    .controls,
+    .targets {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .control-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .editor-panel input[type="checkbox"] {
+      accent-color: #1d4ed8;
+    }
+
+    .text-effects {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 1rem;
+    }
+
+    .effect-group {
+      min-width: 0;
+      margin: 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.6rem;
+      padding: 1rem;
+    }
+
+    .effect-group legend {
+      font-weight: 700;
+    }
+
+    .effect-group:disabled {
+      opacity: 0.5;
+    }
+
+    .effect-group:disabled input {
+      cursor: not-allowed;
+    }
+
+    .slider-label {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .slider-value {
+      font-family: monospace;
+      color: #475569;
+    }
+
+    .range-control {
+      display: block;
+      width: 100%;
+      margin-top: 0.75rem;
+      accent-color: #1d4ed8;
+    }
+
+    .palette-panel {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.6rem;
+      min-width: 0;
+    }
+
+    .opacity-control {
+      max-width: 30rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .direction-label {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .palette-scroll {
+      max-width: 100%;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      padding: 6px;
+    }
+
+    .palette-table {
+      width: max-content;
+      border-spacing: 6px;
+    }
+
+    .palette-table th {
+      font-size: 0.75rem;
+      color: #475569;
+    }
+
+    .palette-table th[scope="row"] {
+      min-width: 80px;
+      text-align: left;
+    }
+
+    .swatch {
+      display: block;
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border: 1px solid #94a3b8;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .swatch[aria-pressed="true"] {
+      outline: 3px solid #0f172a;
+      outline-offset: 1px;
+    }
+
+    .swatch[aria-pressed="true"]::after {
+      content: "✓";
+      position: absolute;
+      inset: 6px;
+      display: grid;
+      place-items: center;
+      background: white;
+      color: #0f172a;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .target-button,
+    .direction-select,
+    .copy-button {
+      padding: 0.6rem 1rem;
+      border: 1px solid #94a3b8;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .target-button {
+      background: white;
+      color: #0f172a;
+    }
+
+    .target-button[aria-pressed="true"],
+    .copy-button {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .target-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .special-colours {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .special-colour {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .target-button:focus-visible,
+    .swatch:focus-visible,
+    .copy-button:focus-visible,
+    .editor-panel input:focus-visible,
+    .direction-select:focus-visible,
+    .html-output:focus-visible,
+    .palette-scroll:focus-visible {
+      outline: 3px solid #2563eb;
+      outline-offset: 4px;
+    }
+
+    .hero [contenteditable] {
+      cursor: text;
+    }
+
+    .hero [contenteditable]:focus {
+      outline: 3px dashed #93c5fd;
+      outline-offset: 6px;
+    }
+
+    .copy-tools {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 10;
+      max-width: calc(100% - 2rem);
+      text-align: right;
+    }
+
+    .copy-status {
+      max-width: 24rem;
+      background: white;
+      color: #0f172a;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+
+    .copy-status:empty {
+      display: none;
+    }
+
+    .manual-copy {
+      max-width: 1152px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .output-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .html-output {
+      display: block;
+      width: 100%;
+      height: 320px;
+      padding: 1rem;
+      border: 1px solid #94a3b8;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      resize: vertical;
+    }
+
+    .editor-help {
+      color: #475569;
+      font-size: 0.85rem;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+
+  <style id="palette-styles"></style>
+</head>
+
+<body class="app-body">
+  <main class="app">
+    <section class="editor-panel" aria-labelledby="app-title">
+      <div class="editor-content">
+        <p>Frontend workshop · Image Version 1</p>
+        <h2 id="app-title">Hero Block Generator</h2>
+
+        <div class="controls" role="group" aria-label="Hero settings">
+          <label class="control-label">
+            <input id="centre-text" type="checkbox">
+            Centre text
+          </label>
+
+          <label class="control-label">
+            <input id="minimum-height" type="checkbox" checked>
+            Minimum height
+          </label>
+
+          <label class="control-label">
+            <input id="show-subheading" type="checkbox" checked>
+            Show subheading
+          </label>
+        </div>
+
+        <div class="text-effects">
+          <fieldset class="effect-group">
+            <legend>H1 text effects</legend>
+
+            <label class="control-label">
+              <input id="h1-serif" type="checkbox">
+              Serif font
+            </label>
+
+            <label class="slider-label" for="h1-spacing">
+              Letter spacing
+              <output
+                id="h1-spacing-value"
+                class="slider-value"
+                for="h1-spacing"
+              >-0.05em</output>
+            </label>
+
+            <input
+              id="h1-spacing"
+              class="range-control"
+              type="range"
+              min="-0.05"
+              max="0.10"
+              step="0.005"
+              value="-0.05"
+              aria-valuetext="-0.05em"
+            >
+          </fieldset>
+
+          <fieldset id="h2-effects" class="effect-group">
+            <legend>H2 text effects</legend>
+
+            <label class="control-label">
+              <input id="h2-serif" type="checkbox">
+              Serif font
+            </label>
+
+            <label class="slider-label" for="h2-spacing">
+              Letter spacing
+              <output
+                id="h2-spacing-value"
+                class="slider-value"
+                for="h2-spacing"
+              >-0.025em</output>
+            </label>
+
+            <input
+              id="h2-spacing"
+              class="range-control"
+              type="range"
+              min="-0.05"
+              max="0.10"
+              step="0.005"
+              value="-0.025"
+              aria-valuetext="-0.025em"
+            >
+          </fieldset>
+        </div>
+
+        <section class="palette-panel" aria-labelledby="palette-title">
+          <h3 id="palette-title">Overlay and text colours</h3>
+
+          <div class="opacity-control">
+            <label class="slider-label" for="overlay-opacity">
+              Overlay opacity
+              <output
+                id="overlay-opacity-value"
+                class="slider-value"
+                for="overlay-opacity"
+              >0.4</output>
+            </label>
+
+            <input
+              id="overlay-opacity"
+              class="range-control"
+              type="range"
+              min="0.1"
+              max="0.9"
+              step="0.05"
+              value="0.4"
+              aria-valuetext="0.4"
+            >
+          </div>
+
+          <div class="controls">
+            <label class="control-label">
+              <input id="gradient-overlay" type="checkbox">
+              Gradient overlay
+            </label>
+
+            <label
+              id="direction-group"
+              class="direction-label"
+              for="direction"
+              hidden
+            >
+              Direction
+              <select id="direction" class="direction-select">
+                <option value="to right">Left to right</option>
+                <option value="to left">Right to left</option>
+                <option value="to bottom">Top to bottom</option>
+                <option value="to top">Bottom to top</option>
+              </select>
+            </label>
+          </div>
+
+          <div
+            id="targets"
+            class="targets"
+            role="group"
+            aria-label="Colour target"
+          ></div>
+
+          <p
+            id="palette-selection"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></p>
+
+          <p id="palette-help" class="editor-help">
+            Choose a target and a colour. Use Tab, then Enter or Space.
+            The palette scrolls horizontally on small screens.
+            Solid and gradient overlay choices are saved separately.
+          </p>
+
+          <div
+            class="palette-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Tailwind colour palette"
+            aria-describedby="palette-help"
+          >
+            <table
+              class="palette-table"
+              aria-label="Colour families and shades"
+            >
+              <thead>
+                <tr id="shade-headings">
+                  <th scope="col">Family</th>
+                </tr>
+              </thead>
+              <tbody id="palette-body"></tbody>
+            </table>
+          </div>
+
+          <div
+            id="special-colours"
+            class="special-colours"
+            role="group"
+            aria-label="Black and white"
+          ></div>
+        </section>
+
+        <p id="editing-help">Click a heading to edit the text.</p>
+      </div>
+    </section>
+
+    <header id="hero" class="hero hero-min-height">
+      <div class="hero-image" aria-hidden="true"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <h1
+          id="hero-heading"
+          class="heading-sans"
+          contenteditable="plaintext-only"
+          tabindex="0"
+          aria-label="Editable hero heading"
+          aria-describedby="editing-help"
+        >Lorem ipsum dolor sit amet</h1>
+
+        <h2
+          id="hero-subheading"
+          class="heading-sans"
+          contenteditable="plaintext-only"
+          tabindex="0"
+          aria-label="Editable hero subheading"
+          aria-describedby="editing-help"
+        >Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+      </div>
+    </header>
+
+    <section
+      id="manual-copy"
+      class="manual-copy"
+      aria-labelledby="manual-title"
+      hidden
+    >
+      <h2 id="manual-title">Copy your HTML manually</h2>
+
+      <p id="manual-help">
+        Automatic copying is unavailable. Copy the code below and paste it
+        into VS Code. The code stays up to date when you change the hero.
+      </p>
+
+      <label for="html-output" class="output-label">
+        Complete HTML page
+      </label>
+
+      <textarea
+        id="html-output"
+        class="html-output"
+        readonly
+        spellcheck="false"
+        aria-describedby="manual-help"
+      ></textarea>
+    </section>
+  </main>
+
+  <footer class="copy-tools">
+    <p
+      id="copy-status"
+      class="copy-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></p>
+
+    <button id="copy-button" class="copy-button" type="button">
+      Copy HTML
+    </button>
+  </footer>
+
+  <script>
+    const previewImagePath = "outputs/assets/img/hero-image.jpg";
+    const exportedImagePath = "assets/img/hero-image.jpg";
+
+    const settings = {
+      centreText: false,
+      minimumHeight: true,
+      showSubheading: true,
+      h1Serif: false,
+      h2Serif: false,
+      h1Spacing: -0.05,
+      h2Spacing: -0.025,
+      h1Colour: "white",
+      h2Colour: "white",
+      overlayColour: "black",
+      overlayOpacity: 0.4,
+      gradientEnabled: false,
+      gradientInitialised: false,
+      startColour: "black",
+      endColour: "blue-500",
+      direction: "to right"
+    };
+
+    const targetSettings = {
+      overlay: "overlayColour",
+      start: "startColour",
+      end: "endColour",
+      h1: "h1Colour",
+      h2: "h2Colour"
+    };
+
+    const targetLabels = {
+      overlay: "Overlay colour",
+      start: "Start colour",
+      end: "End colour",
+      h1: "H1",
+      h2: "H2"
+    };
+
+    const families = [
+      "slate", "gray", "zinc", "neutral", "stone",
+      "red", "orange", "amber", "yellow", "lime",
+      "green", "emerald", "teal", "cyan", "sky",
+      "blue", "indigo", "violet", "purple",
+      "fuchsia", "pink", "rose"
+    ];
+
+    const shades = [
+      50, 100, 200, 300, 400, 500,
+      600, 700, 800, 900, 950
+    ];
+
+    let activeTarget = "overlay";
+
+    function getElement(id) {
+      return document.getElementById(id);
+    }
+
+    const hero = getElement("hero");
+    const heading = getElement("hero-heading");
+    const subheading = getElement("hero-subheading");
+    const heroStyles = getElement("hero-styles");
+    const heroCustom = getElement("hero-custom");
+    const targets = getElement("targets");
+    const paletteSelection = getElement("palette-selection");
+    const copyStatus = getElement("copy-status");
+    const manualCopy = getElement("manual-copy");
+    const htmlOutput = getElement("html-output");
+
+    // Read controls without resetting saved text or colour choices.
+    function updateSettings() {
+      settings.centreText = getElement("centre-text").checked;
+      settings.minimumHeight = getElement("minimum-height").checked;
+      settings.showSubheading = getElement("show-subheading").checked;
+      settings.h1Serif = getElement("h1-serif").checked;
+      settings.h2Serif = getElement("h2-serif").checked;
+
+      settings.h1Spacing = Number(getElement("h1-spacing").value);
+      settings.h2Spacing = Number(getElement("h2-spacing").value);
+      settings.overlayOpacity = Number(
+        getElement("overlay-opacity").value
+      );
+
+      updateHero();
+      refreshOutput();
+    }
+
+    function getDefaultTarget() {
+      return settings.gradientEnabled ? "start" : "overlay";
+    }
+
+    function isTargetVisible(target) {
+      if (target === "overlay") {
+        return !settings.gradientEnabled;
+      }
+
+      if (target === "start" || target === "end") {
+        return settings.gradientEnabled;
+      }
+
+      return true;
+    }
+
+    function updateHero() {
+      // Keep the existing editable heading elements in place.
+      hero.classList.toggle("hero-centre", settings.centreText);
+      hero.classList.toggle("hero-min-height", settings.minimumHeight);
+
+      subheading.hidden = !settings.showSubheading;
+      getElement("h2-effects").disabled = !settings.showSubheading;
+
+      heading.classList.toggle("heading-serif", settings.h1Serif);
+      heading.classList.toggle("heading-sans", !settings.h1Serif);
+
+      subheading.classList.toggle("heading-serif", settings.h2Serif);
+      subheading.classList.toggle("heading-sans", !settings.h2Serif);
+
+      if (
+        !isTargetVisible(activeTarget) ||
+        (activeTarget === "h2" && !settings.showSubheading)
+      ) {
+        activeTarget = getDefaultTarget();
+      }
+
+      for (const button of targets.children) {
+        const target = button.dataset.target;
+
+        button.hidden = !isTargetVisible(target);
+        button.disabled = (
+          target === "h2" && !settings.showSubheading
+        );
+      }
+
+      getElement("direction-group").hidden = !settings.gradientEnabled;
+
+      updateCustomStyles();
+      updatePaletteSelection();
+    }
+
+    // Use the same styling logic for preview and exported page.
+    function generateCustomCSS(imagePath) {
+      const overlayImage = settings.gradientEnabled
+        ? "linear-gradient(" +
+          settings.direction + ", " +
+          "var(--color-" + settings.startColour + "), " +
+          "var(--color-" + settings.endColour + "))"
+        : "none";
+
+      const overlayBackground = settings.gradientEnabled
+        ? "transparent"
+        : "var(--color-" + settings.overlayColour + ")";
+
+      return `
+    .hero .hero-image {
+      background-image: url("${imagePath}");
+    }
+
+    .hero .hero-overlay {
+      background-color: ${overlayBackground};
+      background-image: ${overlayImage};
+      opacity: ${settings.overlayOpacity};
+    }
+
+    .hero h1 {
+      color: var(--color-${settings.h1Colour});
+      letter-spacing: ${settings.h1Spacing}em;
+    }
+
+    .hero h2 {
+      color: var(--color-${settings.h2Colour});
+      letter-spacing:
